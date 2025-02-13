@@ -42,18 +42,15 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: BlocProvider<AuthBloc>(
-        create: (context) => AuthBloc(),
-        child: BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) {
-            if (state is MeInfoLoaded) {
-              return const BottomNavigationDemo();
-            } else if (state is AuthPageLoaded) {
-              return const LoginScreen();
-            }
-            return const OnboardingScreen();
-          },
-        ),
+      home: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is MeInfoLoaded) {
+            return const BottomNavigationDemo();
+          } else if (state is AuthPageLoaded) {
+            return const LoginScreen();
+          }
+          return const OnboardingScreen();
+        },
       ),
     );
   }

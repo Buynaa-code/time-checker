@@ -1,3 +1,4 @@
+import 'package:time_checker/components/constant.dart';
 import 'package:time_checker/service/model/duureg_model.dart';
 
 class Member {
@@ -44,29 +45,36 @@ class Member {
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
-    return Member(
-      id: int.tryParse(json['id'].toString()) ?? 0,
-      ner: json['ner'] ?? "",
-      zurag: json['zurag'],
-      khesegId: int.tryParse(json['kheseg_id'].toString()) ?? 0,
-      createdAt: json['created_at'] ?? "",
-      updatedAt: json['updated_at'] ?? "",
-      code: json['code'] ?? "",
-      utas: json['utas'] ?? "",
-      khayag: json['khayag'] ?? "",
-      duuregId: int.tryParse(json['duureg_id'].toString()) ?? 0,
-      solongosNer: json['solongos_ner'],
-      urturug: double.tryParse(json['urturug'].toString()),
-      urgarg: double.tryParse(json['urgarag'].toString()),
-      bairshil: json['bairshil'],
-      aOgnoo: json['a_ognoo'] ?? "",
-      tOgnoo: json['t_ognoo'] ?? "",
-      khesegBagId: json['kheseg_bag_id'] != null
-          ? int.tryParse(json['kheseg_bag_id'].toString()) ?? 0
-          : null,
-      gerelsenu: json['gerelsenu'].toString() == '1',
-      duureg: Duureg.fromJson(json['duureg']),
-    );
+    try {
+      loggerPretty.e("Parsing Member: $json"); // JSON өгөгдлийг бүрэн хэвлэнэ
+
+      return Member(
+        id: json['id'] ?? 0,
+        ner: json['ner'] ?? "",
+        zurag: json['zurag'],
+        khesegId: int.tryParse(json['kheseg_id'].toString()) ?? 0,
+        createdAt: json['created_at'] ?? "",
+        updatedAt: json['updated_at'] ?? "",
+        code: json['code'] ?? "",
+        utas: json['utas'] ?? "",
+        khayag: json['khayag'] ?? "",
+        duuregId: int.tryParse(json['duureg_id'].toString()) ?? 0,
+        solongosNer: json['solongos_ner'],
+        urturug: double.tryParse(json['urturug'].toString()),
+        urgarg: double.tryParse(json['urgarag'].toString()),
+        bairshil: json['bairshil'],
+        aOgnoo: json['a_ognoo'] ?? "",
+        tOgnoo: json['t_ognoo'] ?? "",
+        khesegBagId: json['kheseg_bag_id'] != null
+            ? int.tryParse(json['kheseg_bag_id'].toString()) ?? 0
+            : null,
+        gerelsenu: json['gerelsenu'].toString() == '1',
+        duureg: Duureg.fromJson(json['duureg']),
+      );
+    } catch (error) {
+      loggerPretty.e("Error parsing member: $error | JSON: $json");
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -57,12 +57,12 @@ class MeInfoError extends AuthState {
 }
 
 class MeInfoLoaded extends AuthState {
-  final Member meInfo;
+  final List<Member> memberList;
 
-  const MeInfoLoaded(this.meInfo);
+  const MeInfoLoaded(this.memberList);
 
   @override
-  List<Object> get props => [meInfo];
+  List<Object> get props => [memberList];
 }
 
 // BLoC
@@ -88,7 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final members = await _repository.getMemberService(); // List<Member>
 
         if (members.isNotEmpty) {
-          emit(MeInfoLoaded(members.first)); // Эхний гишүүнийг авах
+          emit(MeInfoLoaded(members)); // Эхний гишүүнийг авах
         } else {
           emit(const MeInfoError("No members found"));
         }
@@ -108,7 +108,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       final members = await _repository.getMemberService();
-      emit(MeInfoLoaded(members.first));
+      emit(MeInfoLoaded(members));
     } catch (error) {
       emit(MeInfoError(error.toString())); // Алдааг дэлгэрэнгүй харуулж байна
     }
@@ -120,7 +120,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     dioFactory.setToken(event.token);
     try {
       final members = await _repository.getMemberService();
-      emit(MeInfoLoaded(members.first));
+      emit(MeInfoLoaded(members));
     } catch (error) {
       if (kDebugMode) {
         print('error is $error');

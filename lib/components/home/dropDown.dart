@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:time_checker/const/colors.dart';
+import 'package:time_checker/const/text_field.dart';
 
 class DropdownWidget extends StatefulWidget {
   const DropdownWidget({super.key});
@@ -15,7 +17,7 @@ class _DropdownWidgetState extends State<DropdownWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: informationColor6,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -27,24 +29,18 @@ class _DropdownWidgetState extends State<DropdownWidget> {
       ),
       child: DropdownButton<String>(
         value: selectedDate,
-        hint: const Text(
+        hint: Text(
           "Он сар сонгох",
-          style: TextStyle(fontSize: 16, color: Colors.black54),
+          style: ktsBodyLargeBold.copyWith(color: whiteColor),
         ),
         isExpanded: true,
         underline: const SizedBox(),
-        iconEnabledColor: Colors.blueAccent,
+        iconEnabledColor: whiteColor,
         items: ["2025-01", "2025-02", "2025-03"]
             .map((date) => DropdownMenuItem(
                   value: date,
-                  child: Text(
-                    date,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
+                  child: Text(date,
+                      style: ktsBodyLargeBold.copyWith(color: whiteColor)),
                 ))
             .toList(),
         onChanged: (newDate) {

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:time_checker/components/constant.dart';
 import 'package:time_checker/service/model/member_model.dart';
 
@@ -18,19 +19,29 @@ class RepositoryImpl extends Repository {
     try {
       final response = await _apiService.get(endPoint: '/mobile-jagsaalt');
 
-      if (response.data == "Salary period not found") {
-        throw Exception("Salary period not found");
-      }
+      // JSON өгөгдлийг бүхэлд нь хэвлэх
+      loggerPretty.e('Response Data: ${response.data}');
 
-      if (response.data['data'] is List) {
-        return (response.data['data'] as List)
-            .map((e) => Member.fromJson(e))
-            .toList();
+      // `data` нь List эсэхийг шалгах
+      if (response.data is List) {
+        return (response.data as List).map((e) {
+          try {
+            return Member.fromJson(e);
+          } catch (error) {
+            loggerPretty.e('Error parsing member: $error | Data: $e');
+            rethrow;
+          }
+        }).toList();
       } else {
-        throw Exception("Invalid data format");
+        throw Exception(
+            "Invalid data format: Expected a List but got ${response.data['data'].runtimeType}");
       }
     } catch (error) {
-      loggerPretty.d('Response data: $error');
+      loggerPretty.e('get members error: $error');
+      if (error is DioException) {
+        loggerPretty.e('Status Code: ${error.response?.statusCode}');
+        loggerPretty.e('Response Data: ${error.response?.data}');
+      }
       rethrow;
     }
   }
