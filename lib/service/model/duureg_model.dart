@@ -15,11 +15,11 @@ class Duureg {
 
   factory Duureg.fromJson(Map<String, dynamic> json) {
     return Duureg(
-      id: json['id'],
+      id: int.tryParse(json['id'].toString()) ?? 0,
       ner: json['ner'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
-      busId: json['bus_id'],
+      busId: int.tryParse(json['bus_id'].toString()) ?? 0,
     );
   }
 

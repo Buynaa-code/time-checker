@@ -18,18 +18,19 @@ class RepositoryImpl extends Repository {
     try {
       final response = await _apiService.get(endPoint: '/mobile-jagsaalt');
 
-      // Хариу нь List байна уу?
+      if (response.data == "Salary period not found") {
+        throw Exception("Salary period not found");
+      }
+
       if (response.data['data'] is List) {
-        List<Member> members = (response.data['data'])
-            .map((item) => Member.fromJson(item))
+        return (response.data['data'] as List)
+            .map((e) => Member.fromJson(e))
             .toList();
-        return members;
       } else {
-        throw Exception(
-            'Expected List, but got: ${response.data['data'].runtimeType}');
+        throw Exception("Invalid data format");
       }
     } catch (error) {
-      loggerPretty.e('Failed to fetch me service: $error');
+      loggerPretty.d('Response data: $error');
       rethrow;
     }
   }
