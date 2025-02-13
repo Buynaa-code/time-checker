@@ -56,8 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Carousel images list
-
   @override
   @override
   Widget build(BuildContext context) {
@@ -84,9 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Column(
           children: [
-            h48(),
-            const DropdownWidget(),
             h12(),
+            const DropdownWidget(),
+            h24(),
             const Cart(),
             // const SaveButton(),
           ],

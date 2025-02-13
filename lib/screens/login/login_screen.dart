@@ -5,6 +5,7 @@ import 'package:time_checker/bloc/auth_bloc.dart';
 import 'package:time_checker/const/colors.dart';
 import 'package:time_checker/const/spacing.dart';
 import 'package:time_checker/const/text_field.dart';
+import 'package:time_checker/screens/main/home_screen.dart';
 import 'package:time_checker/service/app/di.dart';
 import 'package:time_checker/service/repository/repository.dart';
 
@@ -67,6 +68,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // AuthBloc рүү token дамжуулах
           context.read<AuthBloc>().add(LoggedIn(token: token));
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    const HomeScreen()), // Үүний оронд таны шаардлагатай дэлгэц
+          );
 
           if (kDebugMode) {
             print(token);

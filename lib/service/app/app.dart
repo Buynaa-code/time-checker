@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:time_checker/bloc/auth_bloc.dart';
 
 import 'package:time_checker/screens/login/login_screen.dart';
 import 'package:time_checker/screens/onboarding_screen.dart';
 import 'package:time_checker/screens/widget/bottom_navigation.dart';
-import 'package:time_checker/service/app/di.dart';
 
 class MyApp extends StatefulWidget {
   static String url = 'https://office.jbch.mkh.mn/api';
@@ -31,7 +28,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // Register services
-    instance.registerSingleton<AuthBloc>(AuthBloc());
   }
 
   @override
