@@ -38,7 +38,7 @@ class _CartState extends State<Cart> {
               itemBuilder: (context, index) {
                 var member = members[index];
 
-                bool isArrived = memberStatus[index] ?? false;
+                bool isArrived = member.irts == 1;
 
                 return Card(
                   color: whiteColor,

@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:time_checker/components/constant.dart';
 
 import 'package:time_checker/components/home/card.dart';
 import 'package:time_checker/components/home/dropDown.dart';
@@ -8,6 +10,10 @@ import 'package:time_checker/const/colors.dart';
 import 'package:time_checker/const/spacing.dart';
 import 'package:time_checker/const/text_field.dart';
 import 'package:time_checker/screens/login/login_screen.dart';
+import 'package:time_checker/service/app/di.dart';
+import 'package:time_checker/service/model/date_info.dart';
+
+import 'package:time_checker/service/repository/repository.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +24,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? selectedDate;
+  final Repository _repository = instance<Repository>();
+  List<DateInfo> dateInfo = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<void> logout() async {
     bool confirmLogout = await showDialog(
@@ -57,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: greyColor2,
@@ -70,23 +82,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            // ignore: prefer_const_constructors
-            icon: Icon(Icons.logout, color: dangerColor5),
+            icon: const Icon(Icons.logout, color: dangerColor5),
             onPressed: logout,
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           children: [
             h12(),
-            const DropdownWidget(),
+            DropdownWidget(
+                fetchDateInfo: _repository
+                    .fetchDateInfo), // ✅ fetchDateInfo-г дамжуулж байна
             h24(),
             const Cart(),
-            // const SaveButton(),
           ],
         ),
       ),

@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:time_checker/components/constant.dart';
+import 'package:time_checker/service/model/arrive_check.dart';
+import 'package:time_checker/service/model/date_info.dart';
 import 'package:time_checker/service/model/member_model.dart';
 
 import 'package:time_checker/service/network/netword_info.dart';
@@ -17,14 +19,16 @@ class RepositoryImpl extends Repository {
   @override
   Future<List<Member>> getMemberService() async {
     try {
-      final response = await _apiService.get(endPoint: '/mobile-jagsaalt');
+      final response = await _apiService.get(
+        endPoint: '/mobile-jagsaalt',
+      );
 
       // JSON өгөгдлийг бүхэлд нь хэвлэх
       loggerPretty.e('Response Data: ${response.data}');
 
       // `data` нь List эсэхийг шалгах
-      if (response.data is List) {
-        return (response.data as List).map((e) {
+      if (response.data is Map && response.data['data'] is List) {
+        return (response.data['data'] as List).map((e) {
           try {
             return Member.fromJson(e);
           } catch (error) {
@@ -63,6 +67,52 @@ class RepositoryImpl extends Repository {
       final token = response.data['token'] as String;
       loggerPrettyNoStack.i("This is token $token");
       return token;
+    } catch (error) {
+      loggerPretty.e('Login failed: $error');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<DateInfo>> fetchDateInfo() async {
+    try {
+      final response = await _apiService.get(endPoint: '/ognoo');
+
+      // JSON өгөгдлийг бүхэлд нь хэвлэх
+      loggerPretty.e('Response Data: ${response.data}');
+
+      // `data` нь List эсэхийг шалгах
+      if (response.data is List) {
+        return (response.data as List).map((e) {
+          try {
+            return DateInfo.fromString(e); // fromJson биш fromString ашиглана
+          } catch (error) {
+            loggerPretty.e('Error parsing dateInfo: $error | Data: $e');
+            rethrow;
+          }
+        }).toList();
+      } else {
+        throw Exception(
+            "Invalid data format: Expected a List but got ${response.data.runtimeType}");
+      }
+    } catch (error) {
+      loggerPretty.e('fetch date info error: $error');
+      if (error is DioException) {
+        loggerPretty.e('Status Code: ${error.response?.statusCode}');
+        loggerPretty.e('Response Data: ${error.response?.data}');
+      }
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> sendArrival(ArriveCheck irsernIreegui) async {
+    try {
+      final response = await _apiService.post(
+        endPoint: '/irsen-ireegui',
+        data: irsernIreegui,
+      );
+      loggerPrettyNoStack.i("This is token $response");
     } catch (error) {
       loggerPretty.e('Login failed: $error');
       rethrow;

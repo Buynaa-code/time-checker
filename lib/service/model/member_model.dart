@@ -10,22 +10,23 @@ class Member {
   final String updatedAt;
   final String code;
   final String utas;
-  final String khayag;
+  final String? khayag;
   final int duuregId;
   final String? solongosNer;
   final double? urturug;
-  final double? urgarg;
+  final double? urgarag;
   final String? bairshil;
-  final String aOgnoo;
-  final String tOgnoo;
+  final String? aOgnoo;
+  final String? tOgnoo;
   final int? khesegBagId;
   final bool gerelsenu;
+  final int irts;
   final Duureg duureg;
 
   Member({
     required this.id,
     required this.ner,
-    this.zurag,
+    required this.zurag,
     required this.khesegId,
     required this.createdAt,
     required this.updatedAt,
@@ -35,44 +36,48 @@ class Member {
     required this.duuregId,
     this.solongosNer,
     this.urturug,
-    this.urgarg,
+    this.urgarag,
     this.bairshil,
-    required this.aOgnoo,
-    required this.tOgnoo,
+    this.aOgnoo,
+    this.tOgnoo,
     this.khesegBagId,
     required this.gerelsenu,
+    required this.irts,
     required this.duureg,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
     try {
-      loggerPretty.e("Parsing Member: $json"); // JSON өгөгдлийг бүрэн хэвлэнэ
+      loggerPretty.e("Parsing Member: $json");
 
       return Member(
         id: json['id'] ?? 0,
         ner: json['ner'] ?? "",
         zurag: json['zurag'],
-        khesegId: int.tryParse(json['kheseg_id'].toString()) ?? 0,
+        khesegId: json['kheseg_id'] ?? 0,
         createdAt: json['created_at'] ?? "",
         updatedAt: json['updated_at'] ?? "",
         code: json['code'] ?? "",
-        utas: json['utas'] ?? "",
-        khayag: json['khayag'] ?? "",
-        duuregId: int.tryParse(json['duureg_id'].toString()) ?? 0,
+        utas: json['utas'],
+        khayag: json['khayag'],
+        duuregId: json['duureg_id'] ?? 0,
         solongosNer: json['solongos_ner'],
-        urturug: double.tryParse(json['urturug'].toString()),
-        urgarg: double.tryParse(json['urgarag'].toString()),
-        bairshil: json['bairshil'],
-        aOgnoo: json['a_ognoo'] ?? "",
-        tOgnoo: json['t_ognoo'] ?? "",
-        khesegBagId: json['kheseg_bag_id'] != null
-            ? int.tryParse(json['kheseg_bag_id'].toString()) ?? 0
+        urturug: json['urturug'] != null
+            ? double.tryParse(json['urturug'].toString())
             : null,
+        urgarag: json['urgarag'] != null
+            ? double.tryParse(json['urgarag'].toString())
+            : null,
+        bairshil: json['bairshil'],
+        aOgnoo: json['a_ognoo'],
+        tOgnoo: json['t_ognoo'],
+        khesegBagId: json['kheseg_bag_id'],
         gerelsenu: json['gerelsenu'].toString() == '1',
+        irts: json['irts'] ?? 0,
         duureg: Duureg.fromJson(json['duureg']),
       );
     } catch (error) {
-      loggerPretty.e("Error parsing member: $error | JSON: $json");
+      loggerPretty.e("Error parsing Member: $error | JSON: $json");
       rethrow;
     }
   }
@@ -91,12 +96,13 @@ class Member {
       'duureg_id': duuregId,
       'solongos_ner': solongosNer,
       'urturug': urturug,
-      'urgarag': urgarg,
+      'urgarag': urgarag,
       'bairshil': bairshil,
       'a_ognoo': aOgnoo,
       't_ognoo': tOgnoo,
       'kheseg_bag_id': khesegBagId,
       'gerelsenu': gerelsenu ? 1 : 0,
+      'irts': irts,
       'duureg': duureg.toJson(),
     };
   }

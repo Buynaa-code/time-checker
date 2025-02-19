@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // AuthBloc рүү token дамжуулах
           context.read<AuthBloc>().add(LoggedIn(token: token));
 
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
