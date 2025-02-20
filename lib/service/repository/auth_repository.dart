@@ -1,12 +1,13 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:time_checker/components/constant.dart';
 import 'package:time_checker/service/model/arrive_check.dart';
 import 'package:time_checker/service/model/date_info.dart';
 import 'package:time_checker/service/model/member_model.dart';
-
+import 'package:time_checker/service/network/api_service.dart';
 import 'package:time_checker/service/network/netword_info.dart';
 import 'package:time_checker/service/repository/repository.dart';
-import 'package:time_checker/service/network/api_service.dart';
 
 class RepositoryImpl extends Repository {
   final ApiService _apiService;
@@ -16,35 +17,34 @@ class RepositoryImpl extends Repository {
     this._apiService,
     this._networkInfo,
   );
+
   @override
   Future<List<Member>> getMemberService() async {
     try {
       final response = await _apiService.get(
         endPoint: '/mobile-jagsaalt',
+        queryParameters: {'key': 'value'},
+        data: {'ognoo': '05/01 НЯ'},
       );
 
-      // JSON өгөгдлийг бүхэлд нь хэвлэх
-      loggerPretty.e('Response Data: ${response.data}');
+      loggerPretty.e('Full Response Data: ${jsonEncode(response.data)}');
 
-      // `data` нь List эсэхийг шалгах
-      if (response.data is Map && response.data['data'] is List) {
-        return (response.data['data'] as List).map((e) {
-          try {
-            return Member.fromJson(e);
-          } catch (error) {
-            loggerPretty.e('Error parsing member: $error | Data: $e');
-            rethrow;
-          }
-        }).toList();
+      // JSON өгөгдөл нь List эсэхийг шалгах
+      if (response.data is List) {
+        return (response.data as List).map((e) => Member.fromJson(e)).toList();
+      } else if (response.data is Map && response.data['data'] is List) {
+        return (response.data['data'] as List)
+            .map((e) => Member.fromJson(e))
+            .toList();
       } else {
         throw Exception(
-            "Invalid data format: Expected a List but got ${response.data['data'].runtimeType}");
+            "Invalid data format: Expected a List but got ${response.data.runtimeType}");
       }
     } catch (error) {
       loggerPretty.e('get members error: $error');
       if (error is DioException) {
+        loggerPretty.e('Response Data: ${jsonEncode(error.response?.data)}');
         loggerPretty.e('Status Code: ${error.response?.statusCode}');
-        loggerPretty.e('Response Data: ${error.response?.data}');
       }
       rethrow;
     }
@@ -76,7 +76,10 @@ class RepositoryImpl extends Repository {
   @override
   Future<List<DateInfo>> fetchDateInfo() async {
     try {
-      final response = await _apiService.get(endPoint: '/ognoo');
+      final response =
+          await _apiService.get(endPoint: '/ognoo', queryParameters: {
+        'ognoo': '2023-01-01',
+      });
 
       // JSON өгөгдлийг бүхэлд нь хэвлэх
       loggerPretty.e('Response Data: ${response.data}');

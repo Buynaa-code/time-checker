@@ -13,13 +13,16 @@ class Duureg {
     required this.busId,
   });
 
-  factory Duureg.fromJson(Map<String, dynamic> json) {
+  factory Duureg.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return Duureg(id: 0, ner: "", createdAt: "", updatedAt: "", busId: 0);
+    }
     return Duureg(
-      id: int.tryParse(json['id'].toString()) ?? 0,
-      ner: json['ner'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      busId: int.tryParse(json['bus_id'].toString()) ?? 0,
+      id: json['id'] ?? 0,
+      ner: json['ner'] ?? "",
+      createdAt: json['created_at'] ?? "",
+      updatedAt: json['updated_at'] ?? "",
+      busId: json['bus_id'] ?? 0,
     );
   }
 

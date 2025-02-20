@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:time_checker/const/colors.dart';
 import 'package:time_checker/const/text_field.dart';
@@ -51,7 +52,9 @@ class _DropdownWidgetState extends State<DropdownWidget> {
             ],
           ),
           child: DropdownButton<DateInfo>(
-            focusColor: whiteColor,
+            focusColor: informationColor6,
+            dropdownColor: informationColor6,
+            borderRadius: BorderRadius.circular(20),
             value: selectedDateInfo,
             hint: Text(
               "Он сар сонгох",
@@ -65,7 +68,7 @@ class _DropdownWidgetState extends State<DropdownWidget> {
                       value: dateInfo,
                       child: Text(
                         "${dateInfo.date} - ${dateInfo.day}", // Энд "Огноо - Өдөр"
-                        style: ktsBodyLargeBold.copyWith(color: greyColor8),
+                        style: ktsBodyLargeBold.copyWith(color: whiteColor),
                       ),
                     ))
                 .toList(),

@@ -1,4 +1,3 @@
-import 'package:time_checker/components/constant.dart';
 import 'package:time_checker/service/model/duureg_model.dart';
 
 class Member {
@@ -9,7 +8,7 @@ class Member {
   final String createdAt;
   final String updatedAt;
   final String code;
-  final String utas;
+  final String? utas;
   final String? khayag;
   final int duuregId;
   final String? solongosNer;
@@ -47,39 +46,42 @@ class Member {
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
-    try {
-      loggerPretty.e("Parsing Member: $json");
-
-      return Member(
-        id: json['id'] ?? 0,
-        ner: json['ner'] ?? "",
-        zurag: json['zurag'],
-        khesegId: json['kheseg_id'] ?? 0,
-        createdAt: json['created_at'] ?? "",
-        updatedAt: json['updated_at'] ?? "",
-        code: json['code'] ?? "",
-        utas: json['utas'],
-        khayag: json['khayag'],
-        duuregId: json['duureg_id'] ?? 0,
-        solongosNer: json['solongos_ner'],
-        urturug: json['urturug'] != null
-            ? double.tryParse(json['urturug'].toString())
-            : null,
-        urgarag: json['urgarag'] != null
-            ? double.tryParse(json['urgarag'].toString())
-            : null,
-        bairshil: json['bairshil'],
-        aOgnoo: json['a_ognoo'],
-        tOgnoo: json['t_ognoo'],
-        khesegBagId: json['kheseg_bag_id'],
-        gerelsenu: json['gerelsenu'].toString() == '1',
-        irts: json['irts'] ?? 0,
-        duureg: Duureg.fromJson(json['duureg']),
-      );
-    } catch (error) {
-      loggerPretty.e("Error parsing Member: $error | JSON: $json");
-      rethrow;
-    }
+    return Member(
+      id: json['id'] ?? 0,
+      ner: json['ner'] ?? "",
+      zurag: json['zurag'],
+      khesegId: json['kheseg_id'] ?? 0,
+      createdAt: json['created_at'] ?? "",
+      updatedAt: json['updated_at'] ?? "",
+      code: json['code'] ?? "",
+      utas: json['utas'],
+      khayag: json['khayag'],
+      duuregId: json['duureg_id'] ?? 0,
+      solongosNer: json['solongos_ner'],
+      urturug: json['urturug'] != null
+          ? double.tryParse(json['urturug'].toString())
+          : null,
+      urgarag: json['urgarag'] != null
+          ? double.tryParse(json['urgarag'].toString())
+          : null,
+      bairshil: json['bairshil'],
+      aOgnoo: json['a_ognoo'],
+      tOgnoo: json['t_ognoo'],
+      khesegBagId: json['kheseg_bag_id'] != null
+          ? int.tryParse(json['kheseg_bag_id'].toString())
+          : null,
+      gerelsenu: json['gerelsenu'] != null
+          ? (json['gerelsenu'] is bool
+              ? json['gerelsenu']
+              : json['gerelsenu'].toString() == '1')
+          : false, // `null` байвал `false`
+      irts:
+          json['irts'] != null ? int.tryParse(json['irts'].toString()) ?? 0 : 0,
+      duureg: json['duureg'] != null
+          ? Duureg.fromJson(json['duureg'])
+          : Duureg(id: 0, ner: "", createdAt: "", updatedAt: "", busId: 0),
+      // `duureg` null байвал хоосон `Duureg` объект үүсгэнэ
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:time_checker/bloc/auth_bloc.dart';
 import 'package:time_checker/const/colors.dart';
 import 'package:time_checker/const/text_field.dart';
+import 'package:time_checker/service/app/di.dart';
 import 'package:time_checker/service/model/member_model.dart';
+import 'package:time_checker/service/model/arrive_check.dart';
+import 'package:logger/logger.dart';
+
+import 'package:time_checker/service/repository/repository.dart';
+
+final Logger loggerPretty = Logger();
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -13,8 +21,38 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  Map<int, bool> memberStatus =
-      {}; // Track the status of each member (arrived or not)
+  final Repository _repository = instance<Repository>();
+  Map<int, bool> memberStatus = {};
+
+  Future<void> _irsenIreegui(Member member) async {
+    final String irsenIreegui = memberStatus[member.id] == true ? '0' : '1';
+    final ArriveCheck arriveCheck = ArriveCheck(
+      value: irsenIreegui,
+      itgegchId: member.id,
+      ognoo: DateFormat('yyyy-MM-dd')
+          .format(DateTime.now()), // Assume today’s date
+    );
+
+    try {
+      await _repository.sendArrival(arriveCheck);
+      _showSnackBar(context, 'Амжилттай илгээлээ.', true);
+    } catch (e) {
+      _showSnackBar(context, 'Явцад алдаа гарлаа.', false);
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message, bool isSuccess) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: isSuccess ? successColor4 : dangerColor5,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +75,6 @@ class _CartState extends State<Cart> {
               itemCount: members.length,
               itemBuilder: (context, index) {
                 var member = members[index];
-
                 bool isArrived = member.irts == 1;
 
                 return Card(
@@ -45,89 +82,71 @@ class _CartState extends State<Cart> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  margin: const EdgeInsets.symmetric(vertical: 12.0),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 1.0),
                     child: ListTile(
-                        leading: CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.blueAccent,
-                          backgroundImage: (member.zurag != null &&
-                                  member.zurag!.isNotEmpty &&
-                                  Uri.parse(
-                                          "https://office.jbch.mkh.mn/storage/${member.zurag}")
-                                      .isAbsolute)
-                              ? NetworkImage(
-                                      "https://office.jbch.mkh.mn/storage/${member.zurag}")
-                                  as ImageProvider
-                              : null,
-                          child: (member.zurag == null ||
-                                  member.zurag!.isEmpty ||
-                                  !Uri.parse(
-                                          "https://office.jbch.mkh.mn/storage/${member.zurag}")
-                                      .isAbsolute)
-                              ? const Icon(Icons.person,
-                                  color: whiteColor, size: 48)
-                              : null,
-                        ),
-                        title: Text(member.ner,
-                            style:
-                                ktsBodyLargeBold.copyWith(color: greyColor8)),
-                        subtitle: (member.utas.isNotEmpty)
-                            ? Text(
-                                member.utas,
-                                style:
-                                    ktsBodyRegular.copyWith(color: greyColor5),
-                              )
-                            : Text(
-                                "Утасны дугаар байхгүй",
-                                style:
-                                    ktsBodyRegular.copyWith(color: greyColor5),
-                              ),
-                        trailing: Column(
-                          mainAxisSize: MainAxisSize
-                              .min, // Minimize the space taken by the column
-                          children: [
-                            Expanded(
-                              child: Text(
-                                isArrived ? 'Ирсэн' : 'Ирээгүй',
-                                style: ktsBodySmallBold.copyWith(
-                                  color:
-                                      isArrived ? successColor4 : dangerColor5,
-                                ),
-                              ),
+                      leading: CircleAvatar(
+                        radius: 42,
+                        backgroundColor: Colors.blueAccent,
+                        backgroundImage: (member.zurag != null &&
+                                member.zurag!.isNotEmpty &&
+                                Uri.parse(
+                                        "https://office.jbch.mkh.mn/storage/${member.zurag}")
+                                    .isAbsolute)
+                            ? NetworkImage(
+                                "https://office.jbch.mkh.mn/storage/${member.zurag}")
+                            : null,
+                        child: (member.zurag == null ||
+                                member.zurag!.isEmpty ||
+                                !Uri.parse(
+                                        "https://office.jbch.mkh.mn/storage/${member.zurag}")
+                                    .isAbsolute)
+                            ? const Icon(Icons.person,
+                                color: whiteColor, size: 48)
+                            : null,
+                      ),
+                      title: Text(member.ner,
+                          style: ktsBodyLargeBold.copyWith(color: greyColor8)),
+                      subtitle: (member.utas != null && member.utas!.isNotEmpty)
+                          ? Text(member.utas!,
+                              style: ktsBodyRegular.copyWith(color: greyColor5))
+                          : Text("Утасны дугаар байхгүй",
+                              style:
+                                  ktsBodyRegular.copyWith(color: greyColor5)),
+                      trailing: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isArrived ? 'Ирсэн' : 'Ирээгүй',
+                            style: ktsBodySmallBold.copyWith(
+                              color: isArrived ? successColor4 : dangerColor5,
                             ),
-                            const SizedBox(
-                                height:
-                                    4), // Add a smaller height for reduced space between the text and switch
-                            Expanded(
-                              child: Switch(
-                                value: isArrived,
-                                onChanged: (value) {
-                                  setState(() {
-                                    memberStatus[index] = value;
-                                  });
-                                },
-                                activeColor: successColor4,
-                                inactiveThumbColor: dangerColor5,
-                                inactiveTrackColor:
-                                    dangerColor5.withOpacity(0.3),
-                                activeTrackColor:
-                                    successColor4.withOpacity(0.3),
-                              ),
-                            ),
-                          ],
-                        )),
+                          ),
+                          const SizedBox(height: 4),
+                          Switch(
+                            value: memberStatus[member.id] ?? isArrived,
+                            onChanged: (value) {
+                              setState(() {
+                                memberStatus[member.id] = value;
+                              });
+                              _irsenIreegui(member); // Дахин функц дуудаж байна
+                            },
+                            activeColor: successColor4,
+                            inactiveThumbColor: dangerColor5,
+                            inactiveTrackColor: dangerColor5.withOpacity(0.3),
+                            activeTrackColor: successColor4.withOpacity(0.3),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               },
             ),
           );
         }
-
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

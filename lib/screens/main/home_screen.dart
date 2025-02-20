@@ -1,9 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:time_checker/components/constant.dart';
-
 import 'package:time_checker/components/home/card.dart';
 import 'package:time_checker/components/home/dropDown.dart';
 import 'package:time_checker/const/colors.dart';
