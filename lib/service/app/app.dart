@@ -5,8 +5,6 @@ import 'package:time_checker/bloc/auth_bloc.dart';
 
 import 'package:time_checker/screens/login/login_screen.dart';
 import 'package:time_checker/screens/main/home_screen.dart';
-import 'package:time_checker/screens/onboarding_screen.dart';
-import 'package:time_checker/screens/widget/bottom_navigation.dart';
 
 class MyApp extends StatefulWidget {
   static String url = 'https://office.jbch.mkh.mn/api';

@@ -174,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               const SizedBox(height: 60),
-              _buildBackButton(),
+              // _buildBackButton(),
               const SizedBox(height: 250),
               _buildLoginForm(),
             ],
@@ -184,31 +184,31 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildBackButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: ElevatedButton(
-          onPressed: () => Navigator.pop(context),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: whiteColor,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.arrow_back_ios, color: greyColor5),
-              h4(),
-              Text('Буцах',
-                  style: ktsBodyMediumBold.copyWith(color: greyColor5)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildBackButton() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+  //     child: Align(
+  //       alignment: Alignment.topLeft,
+  //       child: ElevatedButton(
+  //         onPressed: () => Navigator.pop(context),
+  //         style: ElevatedButton.styleFrom(
+  //           backgroundColor: whiteColor,
+  //           shape:
+  //               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  //         ),
+  //         child: Row(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             const Icon(Icons.arrow_back_ios, color: greyColor5),
+  //             h4(),
+  //             Text('Буцах',
+  //                 style: ktsBodyMediumBold.copyWith(color: greyColor5)),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildLoginForm() {
     return Container(
