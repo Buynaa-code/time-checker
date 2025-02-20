@@ -33,6 +33,10 @@ class _CartState extends State<Cart> {
           .format(DateTime.now()), // Assume today’s date
     );
 
+    // Print the member details being processed
+    print(
+        'Sending request for member: ${member.ner}, ID: ${member.id}, Status: $irsenIreegui');
+
     try {
       await _repository.sendArrival(arriveCheck);
       // ignore: use_build_context_synchronously
@@ -120,19 +124,26 @@ class _CartState extends State<Cart> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            // Determine the current arrival status
                             Text(
-                              isArrived ? 'Ирсэн' : 'Ирээгүй',
+                              (memberStatus[member.id] ?? isArrived)
+                                  ? 'Ирсэн'
+                                  : 'Ирээгүй',
                               style: ktsBodySmallBold.copyWith(
-                                color: isArrived ? successColor4 : dangerColor5,
+                                color: (memberStatus[member.id] ?? isArrived)
+                                    ? successColor4
+                                    : dangerColor5,
                               ),
                             ),
                             Switch(
                               value: memberStatus[member.id] ?? isArrived,
                               onChanged: (value) {
                                 setState(() {
-                                  memberStatus[member.id] = value;
+                                  memberStatus[member.id] =
+                                      value; // Update the status in memberStatus
                                 });
-                                _irsenIreegui(member);
+                                _irsenIreegui(
+                                    member); // Send the request to update the status
                               },
                               activeColor: successColor4,
                               inactiveThumbColor: dangerColor5,

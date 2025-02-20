@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
           } else if (state is AuthPageLoaded) {
             return const LoginScreen();
           }
-          return const OnboardingScreen();
+          return const LoginScreen();
         },
       ),
     );
