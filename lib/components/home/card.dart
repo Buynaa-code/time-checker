@@ -35,8 +35,10 @@ class _CartState extends State<Cart> {
 
     try {
       await _repository.sendArrival(arriveCheck);
+      // ignore: use_build_context_synchronously
       _showSnackBar(context, 'Амжилттай илгээлээ.', true);
     } catch (e) {
+      // ignore: use_build_context_synchronously
       _showSnackBar(context, 'Явцад алдаа гарлаа.', false);
     }
   }
@@ -114,30 +116,31 @@ class _CartState extends State<Cart> {
                           : Text("Утасны дугаар байхгүй",
                               style:
                                   ktsBodyRegular.copyWith(color: greyColor5)),
-                      trailing: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            isArrived ? 'Ирсэн' : 'Ирээгүй',
-                            style: ktsBodySmallBold.copyWith(
-                              color: isArrived ? successColor4 : dangerColor5,
+                      trailing: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              isArrived ? 'Ирсэн' : 'Ирээгүй',
+                              style: ktsBodySmallBold.copyWith(
+                                color: isArrived ? successColor4 : dangerColor5,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Switch(
-                            value: memberStatus[member.id] ?? isArrived,
-                            onChanged: (value) {
-                              setState(() {
-                                memberStatus[member.id] = value;
-                              });
-                              _irsenIreegui(member); // Дахин функц дуудаж байна
-                            },
-                            activeColor: successColor4,
-                            inactiveThumbColor: dangerColor5,
-                            inactiveTrackColor: dangerColor5.withOpacity(0.3),
-                            activeTrackColor: successColor4.withOpacity(0.3),
-                          ),
-                        ],
+                            Switch(
+                              value: memberStatus[member.id] ?? isArrived,
+                              onChanged: (value) {
+                                setState(() {
+                                  memberStatus[member.id] = value;
+                                });
+                                _irsenIreegui(member);
+                              },
+                              activeColor: successColor4,
+                              inactiveThumbColor: dangerColor5,
+                              inactiveTrackColor: dangerColor5.withOpacity(0.3),
+                              activeTrackColor: successColor4.withOpacity(0.3),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

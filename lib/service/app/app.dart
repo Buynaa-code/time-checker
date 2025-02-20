@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_checker/bloc/auth_bloc.dart';
 
 import 'package:time_checker/screens/login/login_screen.dart';
+import 'package:time_checker/screens/main/home_screen.dart';
 import 'package:time_checker/screens/onboarding_screen.dart';
 import 'package:time_checker/screens/widget/bottom_navigation.dart';
 
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
       home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is MeInfoLoaded) {
-            return const BottomNavigationDemo();
+            return const HomeScreen();
           } else if (state is AuthPageLoaded) {
             return const LoginScreen();
           }
